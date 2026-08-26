@@ -29,9 +29,12 @@ No paid services and no credit cards are required.
 ## Quick Start (Local Development)
 
 1. **Create `.env`** — copy `.env.example` and fill in the values:
-   - `DATABASE_URL` — a PostgreSQL connection string. The easiest free option is
-     [Neon](https://neon.tech) (free tier, no credit card): create a project and copy the
-     connection string. You can also use any local PostgreSQL instance.
+   - `DATABASE_URL` — a PostgreSQL connection string. Two easy options:
+     - **Local database (no account needed):** run `npm run db:start` — this manages a private
+       PostgreSQL instance stored in `~/mednet-db` (data persists between sessions; stop it with
+       `npm run db:stop`). Then use: `postgresql://mednet@127.0.0.1:54329/mednet`
+     - **Hosted (recommended for production parity):** create a free
+       [Neon](https://neon.tech) database (no credit card) and copy its connection string.
    - `AUTH_SECRET` — generate with `openssl rand -hex 32`.
    - `NEXT_PUBLIC_SITE_URL` — `http://localhost:3000` for development.
    - `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` — the initial administrator account.
@@ -42,11 +45,17 @@ No paid services and no credit cards are required.
 2. **Install and initialize:**
    ```bash
    npm install
+   npm run db:start  # only if using the local database option
    npm run setup     # prisma generate + create tables + seed sample content + create admin
    npm run dev       # http://localhost:3000
    ```
 
 3. **Sign in** at `/admin/login` with the email and password you placed in `.env`.
+
+> **Daily workflow:** if you used the local database option, run `npm run db:start` whenever you
+> begin developing (it remembers your data — nothing is re-created) and `npm run db:stop` when
+> you finish. If the dev server shows "Can't reach database server", the database is simply not
+> started yet.
 
 > Forgot the admin password? Set a new `ADMIN_PASSWORD` in `.env`, delete the user row (or the
 > whole database), and re-run `npm run db:seed`. Passwords are bcrypt-hashed and cannot be
