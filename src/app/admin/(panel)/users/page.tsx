@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { AdminPageHeader } from "@/components/admin/page-parts";
-import { CreateUserForm, ResetPasswordForm } from "@/components/admin/user-forms";
+import { CreateUserForm, ResetPasswordForm, ChangeOwnPasswordForm } from "@/components/admin/user-forms";
 import { ConfirmSubmit } from "@/components/admin/confirm-submit";
 import { updateUser, deleteUser } from "@/lib/actions/users";
 import { Badge } from "@/components/ui/badge";
@@ -111,10 +111,17 @@ export default async function AdminUsersPage() {
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs leading-relaxed text-fg-muted">
-        To change your own password, use the account security section — or ask another administrator. You cannot
-        disable or demote your own account.
-      </p>
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <ChangeOwnPasswordForm />
+        <div className="rounded-2xl border border-line bg-card p-6">
+          <h2 className="font-display text-base font-semibold text-foreground">Password tips</h2>
+          <ul className="mt-3 space-y-2 text-xs leading-relaxed text-fg-muted">
+            <li>• Passwords are stored as bcrypt hashes and can never be read by anyone — including administrators.</li>
+            <li>• Any administrator can reset another member's password from the table above.</li>
+            <li>• For production, share initial passwords through a secure channel and have each person change them here.</li>
+          </ul>
+        </div>
+      </div>
     </>
   );
 }

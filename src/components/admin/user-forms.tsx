@@ -4,7 +4,7 @@ import { useActionState, useState } from "react";
 import { Plus, KeyRound, CheckCircle2, AlertCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/field";
-import { createUser, resetUserPassword } from "@/lib/actions/users";
+import { createUser, resetUserPassword, changeOwnPassword } from "@/lib/actions/users";
 import type { ActionState } from "@/lib/actions/helpers";
 
 export function CreateUserForm() {
@@ -70,8 +70,7 @@ export function CreateUserForm() {
   );
 }
 
-export function ResetPasswordForm({ id, name }: { id: string; name: string }) {
-  const [state, formAction, pending] = useActionState<ActionState, FormData>(resetUserPassword, null);
+export function ResetPasswordForm({ id, name }: { id: string; name: string }) {  const [state, formAction, pending] = useActionState<ActionState, FormData>(resetUserPassword, null);
   const [open, setOpen] = useState(false);
 
   if (!open) {
@@ -95,5 +94,38 @@ export function ResetPasswordForm({ id, name }: { id: string; name: string }) {
         {pending ? "…" : "Set"}
       </Button>
     </form>
+  );
+}
+
+export function ChangeOwnPasswordForm() {
+  const [state, formAction, pending] = useActionState<ActionState, FormData>(changeOwnPassword, null);
+  return (
+    <div className="rounded-2xl border border-line bg-card p-6 shadow-sm">
+      <h2 className="font-display text-base font-semibold text-foreground">Change my password</h2>
+      <p className="mt-1 text-xs text-fg-muted">Applies to your own account immediately.</p>
+      {state && (
+        <p
+          className={`mt-3 flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-sm ${
+            state.ok ? "border-success/30 bg-success/5 text-success" : "border-danger/30 bg-danger/5 text-danger"
+          }`}
+        >
+          {state.ok ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+          {state.message}
+        </p>
+      )}
+      <form action={formAction} className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Field label="Current password" required>
+          <Input name="currentPassword" type="password" required autoComplete="current-password" />
+        </Field>
+        <Field label="New password" required hint="At least 8 characters">
+          <Input name="newPassword" type="password" required minLength={8} autoComplete="new-password" />
+        </Field>
+        <div className="sm:col-span-2">
+          <Button type="submit" variant="subtle" disabled={pending}>
+            {pending ? "Updating…" : "Update password"}
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }
