@@ -32,15 +32,25 @@ export default function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const isActive = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(href));
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full border-b backdrop-blur-md transition-all duration-300",
-        scrolled ? "border-line bg-background/85 shadow-sm" : "border-transparent bg-background/70"
-      )}
-    >
+    <>
+      <header
+        className={cn(
+          "sticky top-0 z-50 w-full border-b backdrop-blur-md transition-all duration-300",
+          scrolled ? "border-line bg-background/85 shadow-sm" : "border-transparent bg-background/70"
+        )}
+      >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" aria-label="Med-Net home" className="flex shrink-0 items-center">
           <Logo className="h-11 w-auto" priority />
@@ -84,7 +94,7 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle className="hidden sm:inline-flex" />
+          <ThemeToggle className="inline-flex" />
           <Link
             href="/join"
             className="hidden h-9 items-center gap-1.5 rounded-lg bg-navy px-4 text-[13.5px] font-medium text-navy-fg shadow-sm transition-all hover:bg-navy-strong hover:shadow-md sm:inline-flex dark:bg-accent dark:text-accent-fg dark:hover:bg-accent-strong"
@@ -104,10 +114,12 @@ export default function Navbar() {
         </div>
       </div>
 
+      </header>
+
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-line bg-background transition-transform duration-300 lg:hidden",
-          open ? "translate-x-0" : "invisible translate-x-full"
+          "fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-line bg-background transition-[transform,visibility] duration-300 lg:hidden",
+          open ? "visible translate-x-0" : "invisible translate-x-full"
         )}
       >
         <nav aria-label="Mobile" className="space-y-1 px-4 py-6">
@@ -152,6 +164,6 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-    </header>
+    </>
   );
 }
