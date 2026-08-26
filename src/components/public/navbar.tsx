@@ -119,10 +119,10 @@ export default function Navbar() {
       <div
         className={cn(
           "fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-line bg-background transition-[transform,visibility] duration-300 lg:hidden",
-          open ? "visible translate-x-0" : "invisible translate-x-full"
+          open ? "pointer-events-auto visible translate-x-0" : "pointer-events-none invisible translate-x-full"
         )}
       >
-        <nav aria-label="Mobile" className="space-y-1 px-4 py-6">
+        <nav aria-label="Mobile" className="space-y-1 px-4 py-6" onClick={() => setOpen(false)}>
           {NAV_LINKS.map((link) => (
             <div key={link.href}>
               <Link
