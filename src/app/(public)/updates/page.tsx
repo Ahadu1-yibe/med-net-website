@@ -49,6 +49,8 @@ export default async function UpdatesPage({
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const hasPublishedPosts =
+    total === 0 ? (await db.post.count({ where: { published: true } })) > 0 : true;
 
   return (
     <>
@@ -115,11 +117,11 @@ export default async function UpdatesPage({
             <EmptyState
               className="mt-10"
               icon={<Megaphone className="h-5 w-5" />}
-              title={total === 0 ? "Nothing published yet" : "No content matches your filters"}
+              title={hasPublishedPosts ? "No content matches your filters" : "Nothing published yet"}
               description={
-                total === 0
-                  ? "Events, news and insights will be published here as Med-Net's activities begin."
-                  : "Try adjusting your search or filters."
+                hasPublishedPosts
+                  ? "Try adjusting your search or filters."
+                  : "Events, news and insights will be published here as Med-Net's activities begin."
               }
             />
           ) : (

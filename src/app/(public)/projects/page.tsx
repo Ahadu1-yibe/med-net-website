@@ -56,6 +56,8 @@ export default async function ProjectsPage({
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const hasPublishedProjects =
+    total === 0 ? (await db.project.count({ where: { published: true } })) > 0 : true;
 
   return (
     <>
@@ -94,11 +96,11 @@ export default async function ProjectsPage({
             <EmptyState
               className="mt-10"
               icon={<Layers className="h-5 w-5" />}
-              title={total === 0 ? "The project portfolio is starting" : "No projects match your filters"}
+              title={hasPublishedProjects ? "No projects match your filters" : "The project portfolio is starting"}
               description={
-                total === 0
-                  ? "Project information will appear here as Med-Net's community-built initiatives are announced. The foundation is being laid now."
-                  : "Try adjusting your search or filters to find what you're looking for."
+                hasPublishedProjects
+                  ? "Try adjusting your search or filters to find what you're looking for."
+                  : "Project information will appear here as Med-Net's community-built initiatives are announced. The foundation is being laid now."
               }
             />
           ) : (

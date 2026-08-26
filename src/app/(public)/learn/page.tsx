@@ -46,6 +46,8 @@ export default async function LearnPage({
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const hasPublishedResources =
+    total === 0 ? (await db.learningResource.count({ where: { published: true } })) > 0 : true;
 
   return (
     <>
@@ -84,11 +86,11 @@ export default async function LearnPage({
             <EmptyState
               className="mt-10"
               icon={<GraduationCap className="h-5 w-5" />}
-              title={total === 0 ? "The Learning Hub is growing" : "No resources match your filters"}
+              title={hasPublishedResources ? "No resources match your filters" : "The Learning Hub is growing"}
               description={
-                total === 0
-                  ? "Learning resources, articles and guides will be added here as Med-Net's education programs develop. Check back soon."
-                  : "Try adjusting your search or filters."
+                hasPublishedResources
+                  ? "Try adjusting your search or filters."
+                  : "Learning resources, articles and guides will be added here as Med-Net's education programs develop. Check back soon."
               }
             />
           ) : (

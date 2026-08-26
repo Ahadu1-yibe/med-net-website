@@ -47,6 +47,8 @@ export default async function ResearchPage({
   ]);
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const hasPublishedResearch =
+    total === 0 ? (await db.researchItem.count({ where: { published: true } })) > 0 : true;
 
   return (
     <>
@@ -85,11 +87,11 @@ export default async function ResearchPage({
             <EmptyState
               className="mt-10"
               icon={<Microscope className="h-5 w-5" />}
-              title={total === 0 ? "Research portfolio in development" : "No research matches your filters"}
+              title={hasPublishedResearch ? "No research matches your filters" : "Research portfolio in development"}
               description={
-                total === 0
-                  ? "Publications, studies and innovation initiatives will appear here as Med-Net's research portfolio develops. Researchers interested in collaborating are welcome to reach out."
-                  : "Try adjusting your search or filters."
+                hasPublishedResearch
+                  ? "Try adjusting your search or filters."
+                  : "Publications, studies and innovation initiatives will appear here as Med-Net's research portfolio develops. Researchers interested in collaborating are welcome to reach out."
               }
             />
           ) : (
